@@ -4,6 +4,7 @@ import 'package:Hackathon/main.dart';
 import 'package:Hackathon/ortak/ortak.dart';
 import 'package:Hackathon/pages/sadece.fotograf.dart';
 import 'package:Hackathon/sqflite.dart';
+import 'package:Hackathon/tabcontroller.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
 
@@ -115,28 +116,14 @@ class _AnaEkranHomeState extends State<AnaEkranHome> {
             ),
             buildListTile(Icon(Icons.mail), kullaniciMail ?? ""),
             buildListTile(Icon(Icons.security), "Şifre İşlemleri"),
+            buildListTile(Icon(Icons.pending_actions), "İlanlarım"),
             buildListTile(Icon(Icons.help), "Yardıma İhtiyacım Var"),
             buildListTile(Icon(Icons.settings), "Ayarlar"),
             buildListTile(Icon(Icons.close), "Oturumu Kapat"),
           ],
         ),
       ),
-      body: Container(
-        decoration: genelSayfaTasarimi,
-        child: ListView(
-          children: [
-            Column(
-              children: [
-                Container(
-                  width: double.infinity,
-                  height: 60,
-                  decoration: BoxDecoration(color: Colors.red),
-                )
-              ],
-            )
-          ],
-        ),
-      ),
+      body: TabBarController(),
     );
   }
 
@@ -169,6 +156,7 @@ class _AnaEkranHomeState extends State<AnaEkranHome> {
 
   void delete() {
     showDialog(
+      barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
           return BackdropFilter(
