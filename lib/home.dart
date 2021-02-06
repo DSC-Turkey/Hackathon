@@ -1,6 +1,4 @@
-import 'package:Hackathon/pages/ayrinti.dart';
 import 'package:Hackathon/pages/kart.dart';
-import 'package:Hackathon/pages/yeni.ilan.olustur.dart';
 import 'package:Hackathon/yuklemeEkraniBekleme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +19,6 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: _button,
       body: Container(
         // decoration: genelSayfaTasarimi,
         child: Padding(
@@ -31,16 +28,6 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-
-  Widget get _button => GestureDetector(
-        onTap: () => Navigator.push(context,
-            MaterialPageRoute(builder: (context) => YeniIlanOlustur())),
-        child: SizedBox(
-          width: 60,
-          height: 60,
-          child: Image.asset("asset/add.png"),
-        ),
-      );
 
   Widget get _listView => StreamBuilder(
         stream: FirebaseFirestore.instance
@@ -64,21 +51,9 @@ class _HomeState extends State<Home> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Ayrinti(
-                                    paylasanID: snapshot.data.docs[index]
-                                        ["paylasanID"],
-                                    idd: snapshot.data.docs[index].id,
-                                  )));
-                    },
-                    child: Kartt(
-                      snapshot: snapshot,
-                      index: index,
-                    ),
+                  Kartt(
+                    snapshot: snapshot,
+                    index: index,
                   ),
                 ],
               );

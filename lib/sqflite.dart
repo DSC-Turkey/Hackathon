@@ -11,14 +11,18 @@ final String Column_kullaniciID = "KullanıcıId";
 final String Column_kullaniciMail = "KullanıcıMail";
 // ignore: non_constant_identifier_names
 final String Column_profilFoto = "KullanıcıProfilFoto";
+// ignore: non_constant_identifier_names
+final String Column_kullaniciAdi = "KullanıcıAdı";
 
 class TaskModel {
   final String kullaniciID;
   final String kullaniciMail;
+  final String kullaniciAdi;
   final String kullaniciProfilFoto;
   int id;
 
   TaskModel({
+    this.kullaniciAdi,
     this.kullaniciID,
     this.kullaniciMail,
     this.kullaniciProfilFoto,
@@ -30,6 +34,7 @@ class TaskModel {
       Column_kullaniciID: this.kullaniciID,
       Column_kullaniciMail: this.kullaniciMail,
       Column_profilFoto: this.kullaniciProfilFoto,
+      Column_kullaniciAdi: this.kullaniciAdi,
     };
   }
 }
@@ -45,7 +50,7 @@ class TodoHelper {
     db = await openDatabase(join(await getDatabasesPath(), "database.db"),
         onCreate: (db, version) {
       return db.execute(
-          "CREATE TABLE $tableName($Column_id INTEGER PRIMARY KEY AUTOINCREMENT, $Column_kullaniciID TEXT, $Column_kullaniciMail TEXT, $Column_profilFoto TEXT)");
+          "CREATE TABLE $tableName($Column_id INTEGER PRIMARY KEY AUTOINCREMENT, $Column_kullaniciID TEXT, $Column_kullaniciMail TEXT, $Column_profilFoto TEXT, $Column_kullaniciAdi TEXT)");
     }, version: 1);
   }
 
@@ -67,6 +72,7 @@ class TodoHelper {
 
     return List.generate(tasks.length, (i) {
       return TaskModel(
+        kullaniciAdi: tasks[i][Column_kullaniciAdi],
         kullaniciID: tasks[i][Column_kullaniciID],
         kullaniciMail: tasks[i][Column_kullaniciMail],
         kullaniciProfilFoto: tasks[i][Column_profilFoto],

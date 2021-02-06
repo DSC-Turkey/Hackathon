@@ -156,12 +156,14 @@ class _LoginPageState extends State<LoginPage> {
                                   .get()
                                   .then((value) {
                                 idd = value.docs.first.id;
-                                print(idd);
+                                print(value.docs.first.data()["kullanıcıAdı"]);
                                 gonderilen = TaskModel(
+                                    kullaniciAdi:
+                                        value.docs.first.data()["kullanıcıAdı"],
                                     kullaniciID: idd,
                                     kullaniciMail: mailGiris.text.trim(),
                                     kullaniciProfilFoto:
-                                        "https://firebasestorage.googleapis.com/v0/b/hackathon-c3438.appspot.com/o/groom.png?alt=media&token=5aa8a568-f86d-4658-8be2-50a6db239232");
+                                        value.docs.first.data()["profilFoto"]);
                                 _todoHelper.insertTask(gonderilen);
                                 Navigator.of(context).pushAndRemoveUntil(
                                     MaterialPageRoute(

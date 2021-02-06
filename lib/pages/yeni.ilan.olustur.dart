@@ -44,9 +44,11 @@ class _YeniIlanOlusturState extends State<YeniIlanOlustur> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await loadJson();
     });
-    dropdownValueSehir = 'Seçiniz';
-    dropdownValueIlce = 'Seçiniz';
-    dropdownValueIlan = 'Seçiniz';
+    setState(() {
+      dropdownValueSehir = 'Seçiniz';
+      dropdownValueIlce = 'Seçiniz';
+      dropdownValueIlan = 'Seçiniz';
+    });
     super.initState();
   }
 
@@ -275,11 +277,21 @@ class _YeniIlanOlusturState extends State<YeniIlanOlustur> {
                       ),
                     ),
                   ],
-                  color: fotolar.length > 0 ? Colors.white : Colors.grey,
+                  color: fotolar.length > 0 &&
+                          dropdownValueSehir != "Seçiniz" &&
+                          dropdownValueIlce != "Seçiniz" &&
+                          dropdownValueIlan != "Seçiniz" &&
+                          controller.text.trim().length > 1
+                      ? Colors.white
+                      : Colors.grey,
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: FlatButton(
-                  onPressed: fotolar.length > 0
+                  onPressed: fotolar.length > 0 &&
+                          dropdownValueSehir != "Seçiniz" &&
+                          dropdownValueIlce != "Seçiniz" &&
+                          dropdownValueIlan != "Seçiniz" &&
+                          controller.text.trim().length > 1
                       ? () async {
                           showDialog(
                               barrierDismissible: false,

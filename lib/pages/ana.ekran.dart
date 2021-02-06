@@ -6,12 +6,16 @@ import 'package:Hackathon/pages/ilanlarim.dart';
 import 'package:Hackathon/pages/sadece.fotograf.dart';
 import 'package:Hackathon/sqflite.dart';
 import 'package:Hackathon/tabcontroller.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:toast/toast.dart';
 
 var kullaniciID;
 var kullaniciProfilFoto;
 var kullaniciMail;
+var kullaniciAdi;
+final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
 class AnaEkran extends StatefulWidget {
   @override
@@ -36,9 +40,7 @@ class AnaEkranHome extends StatefulWidget {
 class _AnaEkranHomeState extends State<AnaEkranHome> {
   @override
   void initState() {
-    kullaniciBilgileri().whenComplete(() {
-      kullaniciProfilFoto = kullaniciProfilFoto;
-    });
+    kullaniciBilgileri();
     super.initState();
   }
 
@@ -81,11 +83,12 @@ class _AnaEkranHomeState extends State<AnaEkranHome> {
                               color: Colors.grey,
                             ),
                             borderRadius: BorderRadius.circular(70.0),
-                            image: DecorationImage(
-                              image: NetworkImage(kullaniciProfilFoto ??
-                                  "https://firebasestorage.googleapis.com/v0/b/hackathon-c3438.appspot.com/o/groom.png?alt=media&token=5aa8a568-f86d-4658-8be2-50a6db239232"),
-                              fit: BoxFit.cover,
-                            ),
+                            image: kullaniciProfilFoto != null
+                                ? DecorationImage(
+                                    image: NetworkImage(kullaniciProfilFoto),
+                                    fit: BoxFit.cover,
+                                  )
+                                : null,
                           ),
                         ),
                       ),
@@ -96,7 +99,7 @@ class _AnaEkranHomeState extends State<AnaEkranHome> {
                   bottom: 10,
                   left: 20,
                   child: Text(
-                    'username',
+                    kullaniciAdi ?? "",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -116,12 +119,10 @@ class _AnaEkranHomeState extends State<AnaEkranHome> {
                 ),
               ],
             ),
-            buildListTile(Icon(Icons.mail), kullaniciMail ?? ""),
-            buildListTile(Icon(Icons.security), "Şifre İşlemleri"),
-            buildListTile(Icon(Icons.pending_actions), "İlanlarım"),
-            buildListTile(Icon(Icons.help), "Yardıma İhtiyacım Var"),
-            buildListTile(Icon(Icons.settings), "Ayarlar"),
-            buildListTile(Icon(Icons.close), "Oturumu Kapat"),
+            buildListTile(Icon(LineAwesomeIcons.envelope), kullaniciMail ?? ""),
+            buildListTile(Icon(LineAwesomeIcons.lock), "Şifre İşlemleri"),
+            buildListTile(Icon(LineAwesomeIcons.home), "İlanlarım"),
+            buildListTile(Icon(LineAwesomeIcons.door_closed), "Oturumu Kapat"),
           ],
         ),
       ),
@@ -141,7 +142,9 @@ class _AnaEkranHomeState extends State<AnaEkranHome> {
               builder: (context) => Ilanlarim(),
             ),
           );
-        } else if (text == "Oturumu Kapat") delete();
+        } else if (text == "Oturumu Kapat")
+          delete();
+        else if (text == "Şifre İşlemleri") sifreDegistir();
       },
       child: ListTile(
         leading: icon,
@@ -156,9 +159,13 @@ class _AnaEkranHomeState extends State<AnaEkranHome> {
     List<TaskModel> list = await _todoHelper.getAllTask();
     if (list.isEmpty) {
     } else {
-      kullaniciID = list.last.kullaniciID;
-      kullaniciProfilFoto = list.last.kullaniciProfilFoto;
-      kullaniciMail = list.last.kullaniciMail;
+      setState(() {
+        kullaniciID = list.last.kullaniciID;
+        kullaniciProfilFoto = list.last.kullaniciProfilFoto;
+        kullaniciMail = list.last.kullaniciMail;
+        kullaniciAdi = list.last.kullaniciAdi;
+        print(kullaniciAdi);
+      });
       return "";
     }
   }
@@ -191,6 +198,49 @@ class _AnaEkranHomeState extends State<AnaEkranHome> {
                           .whenComplete(() {
                         Toast.show("Oturum Kapatıldı", context,
                             duration: Toast.LENGTH_LONG, gravity: Toast.CENTER);
+                      });
+                    },
+                    child: Text("Evet"),
+                  ),
+                  FlatButton(
+                    color: Colors.green,
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text("Hayır"),
+                  ),
+                ],
+              ));
+        });
+  }
+
+  void sifreDegistir() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: 4.0,
+                sigmaY: 4.0,
+              ),
+              child: AlertDialog(
+                title: Text(
+                  "Mailinize bir şifre sıfırlama bağlantısı gönderilecek.",
+                  style: TextStyle(fontSize: 17),
+                ),
+                actions: [
+                  FlatButton(
+                    color: Colors.deepOrange,
+                    onPressed: () async {
+                      await _firebaseAuth
+                          .sendPasswordResetEmail(
+                              email: _firebaseAuth.currentUser.email)
+                          .whenComplete(() {
+                        Navigator.pop(context);
+                        Toast.show("Bağlantı Gönderildi.", context,
+                            duration: Toast.LENGTH_SHORT,
+                            gravity: Toast.CENTER);
                       });
                     },
                     child: Text("Evet"),
