@@ -152,7 +152,7 @@ class _NewUserState extends State<NewUser> {
                   ),
                   Padding(
                     padding:
-                        const EdgeInsets.only(top: 40, right: 50, left: 200),
+                        const EdgeInsets.only(top: 40, right: 50, left: 150),
                     child: Container(
                       alignment: Alignment.bottomRight,
                       height: 50,

@@ -1,7 +1,5 @@
 import 'package:Hackathon/home.dart';
-import 'package:Hackathon/ortak/ortak.dart';
-import 'package:Hackathon/pages/ana.ekran.dart';
-import 'package:Hackathon/search.dart';
+import 'package:floating_search_bar/floating_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:motion_tab_bar/MotionTabBarView.dart';
 import 'package:motion_tab_bar/MotionTabController.dart';
@@ -40,7 +38,13 @@ class _TabBarControllerState extends State<TabBarController>
         body: MotionTabBarView(
           controller: _tabController,
           children: [
-            Text("1"),
+            FloatingSearchBar.builder(
+                itemCount: 100,
+                itemBuilder: (BuildContext context, int index) {
+                  return ListTile(
+                    leading: Text(index.toString()),
+                  );
+                }),
             Home(scrollController),
             Text("3"),
           ],
@@ -49,26 +53,9 @@ class _TabBarControllerState extends State<TabBarController>
     );
   }
 
-  Widget get _sizedBox => SizedBox(width: 20);
-
-  Widget get _searchField => TextField(
-        maxLines: 1,
-        decoration: InputDecoration(
-            prefixIcon: Icon(Icons.search),
-            contentPadding: EdgeInsets.all(0),
-            hintText: "Search something.",
-            filled: true,
-            focusedBorder: _inputBorder,
-            border: _inputBorder),
-      );
-
-  OutlineInputBorder get _inputBorder => OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.grey),
-      borderRadius: BorderRadius.circular(25));
-
   Widget get _tabBar => MotionTabBar(
-        labels: ["Account", "Home", "Dashboard"],
-        initialSelectedTab: "Home",
+        labels: ["Arama", "Ana Ekran", "Diger"],
+        initialSelectedTab: "Ana Ekran",
         tabIconColor: Colors.blueGrey,
         tabSelectedColor: Colors.lightBlueAccent,
         onTabItemSelected: (int value) {
@@ -78,7 +65,7 @@ class _TabBarControllerState extends State<TabBarController>
             currentIndex = value;
           });
         },
-        icons: [Icons.account_box, Icons.home, Icons.menu],
+        icons: [Icons.search, Icons.home, Icons.menu],
         textStyle: TextStyle(color: Colors.lightBlueAccent),
       );
 }

@@ -5,9 +5,11 @@ import 'dart:ui';
 import 'package:Hackathon/main.dart';
 import 'package:Hackathon/ortak/ortak.dart';
 import 'package:Hackathon/pages/ana.ekran.dart';
+import 'package:Hackathon/pages/profil.Foto.Sec.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'package:toast/toast.dart';
@@ -329,6 +331,7 @@ class _YeniIlanOlusturState extends State<YeniIlanOlustur> {
                             "ilçe": dropdownValueIlce.toLowerCase(),
                             "ilanKonusu": dropdownValueIlan.toLowerCase(),
                             "ilanYazisi": controller.text.toLowerCase(),
+                            "begenenler": [],
                           }).whenComplete(() {
                             setState(() {
                               controller.clear();
@@ -366,18 +369,18 @@ class _YeniIlanOlusturState extends State<YeniIlanOlustur> {
 
   GestureDetector buildContainer({File gelenfile}) {
     return GestureDetector(
-      onTap: () {
-        gelenfile != null ? deletePic(gelenfile) : secimEkrani();
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: gelenfile == null ? Colors.blueAccent : Colors.grey[50],
-          border: gelenfile == null ? Border.all(width: 2) : null,
-        ),
-        child:
-            gelenfile != null ? Image.file(gelenfile) : Icon(Icons.camera_alt),
-      ),
-    );
+        onTap: () {
+          gelenfile != null ? deletePic(gelenfile) : secimEkrani();
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: gelenfile == null ? Colors.blueAccent : Colors.grey[50],
+            border: gelenfile == null ? Border.all(width: 2) : null,
+          ),
+          child: gelenfile != null
+              ? Image.file(gelenfile)
+              : Icon(Icons.camera_alt),
+        ));
   }
 
   void secimEkrani() {
@@ -422,7 +425,7 @@ class _YeniIlanOlusturState extends State<YeniIlanOlustur> {
       setState(() {
         _image = image;
       });
-      fotolar.add(_image);
+      _cropImage(_image);
     }
   }
 
@@ -464,5 +467,46 @@ class _YeniIlanOlusturState extends State<YeniIlanOlustur> {
                 ],
               ));
         });
+  }
+
+  Future<Null> _cropImage(dynamic gelen) async {
+    File croppedFile = await ImageCropper.cropImage(
+        sourcePath: gelen.path,
+        aspectRatioPresets: Platform.isAndroid
+            ? [
+                CropAspectRatioPreset.square,
+                CropAspectRatioPreset.ratio3x2,
+                CropAspectRatioPreset.original,
+                CropAspectRatioPreset.ratio4x3,
+                CropAspectRatioPreset.ratio16x9
+              ]
+            : [
+                CropAspectRatioPreset.original,
+                CropAspectRatioPreset.square,
+                CropAspectRatioPreset.ratio3x2,
+                CropAspectRatioPreset.ratio4x3,
+                CropAspectRatioPreset.ratio5x3,
+                CropAspectRatioPreset.ratio5x4,
+                CropAspectRatioPreset.ratio7x5,
+                CropAspectRatioPreset.ratio16x9
+              ],
+        androidUiSettings: AndroidUiSettings(
+          toolbarTitle: 'Crop Image',
+          toolbarColor: Colors.blue,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.ratio16x9,
+          hideBottomControls: true,
+          showCropGrid: false,
+        ),
+        iosUiSettings: IOSUiSettings(
+          title: 'Crop Image',
+        ));
+    if (croppedFile != null) {
+      cropImage = croppedFile;
+      setState(() {
+        state = AppState.cropped;
+      });
+      fotolar.add(cropImage);
+    }
   }
 }

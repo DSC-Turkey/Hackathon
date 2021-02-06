@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:Hackathon/main.dart';
 import 'package:Hackathon/ortak/ortak.dart';
+import 'package:Hackathon/pages/ilanlarim.dart';
 import 'package:Hackathon/pages/sadece.fotograf.dart';
 import 'package:Hackathon/sqflite.dart';
 import 'package:Hackathon/tabcontroller.dart';
@@ -107,6 +108,7 @@ class _AnaEkranHomeState extends State<AnaEkranHome> {
                   left: 90,
                   bottom: 45,
                   child: FloatingActionButton(
+                    heroTag: "1",
                     mini: true,
                     onPressed: () {},
                     child: Icon(Icons.camera_alt),
@@ -132,7 +134,14 @@ class _AnaEkranHomeState extends State<AnaEkranHome> {
       padding: EdgeInsets.all(0),
       highlightColor: Colors.lightBlueAccent,
       onPressed: () {
-        text == "Oturumu Kapat" ? delete() : print("ds");
+        if (text == "İlanlarım") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Ilanlarim(),
+            ),
+          );
+        } else if (text == "Oturumu Kapat") delete();
       },
       child: ListTile(
         leading: icon,
@@ -156,7 +165,7 @@ class _AnaEkranHomeState extends State<AnaEkranHome> {
 
   void delete() {
     showDialog(
-      barrierDismissible: false,
+        barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
           return BackdropFilter(

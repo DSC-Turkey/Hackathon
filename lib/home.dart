@@ -1,5 +1,8 @@
-import 'package:Hackathon/ortak/ortak.dart';
+import 'package:Hackathon/pages/ayrinti.dart';
+import 'package:Hackathon/pages/kart.dart';
 import 'package:Hackathon/pages/yeni.ilan.olustur.dart';
+import 'package:Hackathon/yuklemeEkraniBekleme.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -20,70 +23,84 @@ class _HomeState extends State<Home> {
     return Scaffold(
       floatingActionButton: _button,
       body: Container(
-        decoration: genelSayfaTasarimi,
-        child: _listView,
+        // decoration: genelSayfaTasarimi,
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 30),
+          child: _listView,
+        ),
       ),
     );
   }
 
-  Widget get _button => FloatingActionButton(
-        onPressed: () => Navigator.push(context,
+  Widget get _button => GestureDetector(
+        onTap: () => Navigator.push(context,
             MaterialPageRoute(builder: (context) => YeniIlanOlustur())),
-        child: Icon(Icons.add),
-      );
-
-  Widget get _listView => ListView.builder(
-        itemCount: 10,
-        controller: widget.controller,
-        itemBuilder: (context, index) {
-          return _card;
-        },
-      );
-
-  Widget get _card => Card(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-        child: ListTile(
-          leading: CircleAvatar(),
-          title: Wrap(
-            runSpacing: 10,
-            children: <Widget>[
-              Text("Hello", style: titleTextStyle),
-              Text(
-                data,
-                maxLines: 5,
-                overflow: TextOverflow.ellipsis,
-              ),
-              _placeHolder,
-              _cardButtons
-            ],
-          ),
+        child: SizedBox(
+          width: 60,
+          height: 60,
+          child: Image.asset("asset/add.png"),
         ),
       );
 
-  Widget get _placeHolder => Container(
-        height: 100,
-        child: Placeholder(),
+  Widget get _listView => StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection("ilanlar")
+            .limit(10)
+            .snapshots(),
+        builder: (BuildContext context, snapshot) {
+          if (snapshot.hasError) {
+            return yuklemeBasarisizIse();
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return YuklemeBeklemeEkrani(
+              gelenYazi: "Lütfen Bekleyin.",
+            );
+          }
+          return ListView.separated(
+            itemCount: snapshot.data.docs.length,
+            controller: widget.controller,
+            itemBuilder: (context, index) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Ayrinti(
+                                    paylasanID: snapshot.data.docs[index]
+                                        ["paylasanID"],
+                                    idd: snapshot.data.docs[index].id,
+                                  )));
+                    },
+                    child: Kartt(
+                      snapshot: snapshot,
+                      index: index,
+                    ),
+                  ),
+                ],
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return Divider(
+                height: 10,
+              );
+            },
+          );
+        },
       );
-
-  Widget get _cardButtons => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[_iconButton, _iconButton],
-      );
-
-  Widget _iconChild(String text) => Wrap(
-        spacing: 5,
-        children: <Widget>[
-          Icon(Icons.money),
-          Text(text),
-        ],
-      );
-
-  Widget get _iconButton => InkWell(
-        child: _iconChild("1"),
-        onTap: () {},
-      );
+  Padding yuklemeBasarisizIse() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 5, 0, 0),
+      child: CircleAvatar(
+        backgroundColor: Colors.grey[50],
+        child: Icon(
+          Icons.clear,
+          color: Colors.red,
+        ),
+      ),
+    );
+  }
 }
-
-final titleTextStyle =
-    TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Colors.black);
