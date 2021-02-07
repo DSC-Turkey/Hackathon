@@ -2,9 +2,17 @@
 
 HelpTouch is a Flutter project made for Flutter Hackathon.
 
-![](App Screenshots/Google Pixel 4 XL Screenshot 0.png)
-![](App Screenshots/Google Pixel 4 XL Screenshot 1.png)
-![](App Screenshots/Google Pixel 4 XL Screenshot 2.png)
+<div class="row">
+  <div class="column">
+    <img src="App%20Screenshots/Google%20Pixel%204%20XL%20Screenshot%200.png" width="200"/>
+  </div>
+  <div class="column">
+    <img src="App%20Screenshots/Google%20Pixel%204%20XL%20Screenshot%201.png" width="200"/>
+  </div>
+  <div class="column">
+    <img src="App%20Screenshots/Google%20Pixel%204%20XL%20Screenshot%202.png" width="200"/>
+  </div>
+</div>
 
 ## What is the purpose of HelpTouch?
 
