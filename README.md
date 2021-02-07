@@ -3,15 +3,9 @@
 HelpTouch is a Flutter project made for Flutter Hackathon.
 
 <div class="row">
-  <div class="column">
-    <img src="App%20Screenshots/Google%20Pixel%204%20XL%20Screenshot%200.png" width="200"/>
-  </div>
-  <div class="column">
-    <img src="App%20Screenshots/Google%20Pixel%204%20XL%20Screenshot%201.png" width="200"/>
-  </div>
-  <div class="column">
-    <img src="App%20Screenshots/Google%20Pixel%204%20XL%20Screenshot%202.png" width="200"/>
-  </div>
+  <img src="App%20Screenshots/Google%20Pixel%204%20XL%20Screenshot%200.png" width="200"/>
+  <img src="App%20Screenshots/Google%20Pixel%204%20XL%20Screenshot%201.png" width="200"/>
+  <img src="App%20Screenshots/Google%20Pixel%204%20XL%20Screenshot%202.png" width="200"/>
 </div>
 
 ## What is the purpose of HelpTouch?
