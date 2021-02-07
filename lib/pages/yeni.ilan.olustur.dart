@@ -101,7 +101,7 @@ class _YeniIlanOlusturState extends State<YeniIlanOlustur> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         DropdownButton<String>(
-                          dropdownColor: Colors.lightBlueAccent,
+                          dropdownColor: Colors.white,
                           value: dropdownValueSehir,
                           icon: Icon(
                             Icons.arrow_downward,
@@ -264,11 +264,21 @@ class _YeniIlanOlusturState extends State<YeniIlanOlustur> {
                             ),
                           ),
                         ],
-                        color: fotolar.length > 0 ? Colors.white : Colors.grey,
+                        color: fotolar.length > 0 &&
+                                dropdownValueSehir != "Seçiniz" &&
+                                dropdownValueIlce != "Seçiniz" &&
+                                dropdownValueIlan != "Seçiniz" &&
+                                controller.text.trim().length > 0
+                            ? Colors.white
+                            : Colors.grey,
                         borderRadius: BorderRadius.circular(30),
                       ),
                       child: FlatButton(
-                        onPressed: fotolar.length > 0
+                        onPressed: fotolar.length > 0 &&
+                                dropdownValueSehir != "Seçiniz" &&
+                                dropdownValueIlce != "Seçiniz" &&
+                                dropdownValueIlan != "Seçiniz" &&
+                                controller.text.trim().length > 0
                             ? () async {
                                 showDialog(
                                     barrierDismissible: false,
@@ -331,10 +341,11 @@ class _YeniIlanOlusturState extends State<YeniIlanOlustur> {
                                     dropdownValueSehir = 'Seçiniz';
                                     dropdownValueIlce = 'Seçiniz';
                                     dropdownValueIlan = 'Seçiniz';
+                                    fotolar.clear();
+                                    fotolarLink.clear();
                                   });
                                   Navigator.pop(context);
                                   buildToast(context, "İlan yayınlandı.");
-                                  setState(() {});
                                 });
                               }
                             : null,
