@@ -8,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:path/path.dart';
 
 import '../main.dart';
@@ -50,124 +51,131 @@ class _ProfilFOtoSecState extends State<ProfilFotoSec> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: genelSayfaTasarimi,
-        child: ListView(
-          children: [
-            Column(
-              children: [
-                Row(
-                  children: [
-                    VerticalText(
-                      text: "Profil Fotoğrafı",
-                    ),
-                    TextLogin(
-                      text:
-                          "Profil fotoğrafın sayesinde insanlar seni daha iyi tanıyabilir.",
-                    )
-                  ],
-                ),
-                Column(
-                  children: [
-                    Container(
-                      alignment: Alignment.center,
-                      width: double.infinity,
-                      height: 130,
-                      child: CircleAvatar(
-                        radius: 55,
-                        backgroundColor: Color(0xffFDCF09),
-                        child: cropImage != null
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(200),
-                                child: Image.file(
-                                  cropImage,
+    return WillPopScope(
+      // ignore: missing_return
+      onWillPop: () {
+        _clearImage();
+        Navigator.pop(context);
+      },
+      child: Scaffold(
+        body: Container(
+          decoration: genelSayfaTasarimi,
+          child: ListView(
+            children: [
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      VerticalText(
+                        text: "Profil Fotoğrafı",
+                      ),
+                      TextLogin(
+                        text:
+                            "Profil fotoğrafın sayesinde insanlar seni daha iyi tanıyabilir.",
+                      )
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                        alignment: Alignment.center,
+                        width: double.infinity,
+                        height: 130,
+                        child: CircleAvatar(
+                          radius: 55,
+                          backgroundColor: Color(0xffFDCF09),
+                          child: cropImage != null
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(200),
+                                  child: Image.file(
+                                    cropImage,
+                                    width: 150,
+                                    height: 150,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              : Container(
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                        width: 2,
+                                        color: Colors.lightBlueAccent,
+                                      ),
+                                      color: Colors.grey[200],
+                                      borderRadius: BorderRadius.circular(200)),
                                   width: 150,
                                   height: 150,
-                                  fit: BoxFit.cover,
                                 ),
+                        ),
+                      ),
+                      FloatingActionButton(
+                        backgroundColor: Colors.lightBlueAccent,
+                        mini: true,
+                        onPressed: () => cropImage == null
+                            ? secimEkrani(context)
+                            : _clearImage(),
+                        child: cropImage == null
+                            ? Icon(
+                                Icons.camera_alt,
+                                color: Colors.white,
                               )
-                            : Container(
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                      width: 2,
-                                      color: Colors.lightBlueAccent,
-                                    ),
-                                    color: Colors.grey[200],
-                                    borderRadius: BorderRadius.circular(200)),
-                                width: 150,
-                                height: 150,
+                            : Icon(
+                                Icons.delete,
+                                color: Colors.white,
                               ),
                       ),
-                    ),
-                    FloatingActionButton(
-                      backgroundColor: Colors.lightBlueAccent,
-                      mini: true,
-                      onPressed: () => cropImage == null
-                          ? secimEkrani(context)
-                          : _clearImage(),
-                      child: cropImage == null
-                          ? Icon(
-                              Icons.camera_alt,
-                              color: Colors.white,
-                            )
-                          : Icon(
-                              Icons.delete,
-                              color: Colors.white,
-                            ),
-                    ),
-                    Divider(
-                      height: 15,
-                      indent: 500.0,
-                    ),
-                    cropImage != null
-                        ? Container(
-                            alignment: Alignment.center,
-                            height: 50,
-                            width: MediaQuery.of(context).size.width - 100,
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.blue[300],
-                                  blurRadius: 10.0,
-                                  spreadRadius: 1.0,
-                                  offset: Offset(
-                                    5.0,
-                                    5.0,
-                                  ),
-                                ),
-                              ],
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            child: FlatButton(
-                              onPressed: () => uploadImagee(),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(
-                                    'Üyeliği Tamamla',
-                                    style: TextStyle(
-                                      color: Colors.lightBlueAccent,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w700,
+                      Divider(
+                        height: 15,
+                        indent: 500.0,
+                      ),
+                      cropImage != null
+                          ? Container(
+                              alignment: Alignment.center,
+                              height: 50,
+                              width: MediaQuery.of(context).size.width - 100,
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.blue[300],
+                                    blurRadius: 10.0,
+                                    spreadRadius: 1.0,
+                                    offset: Offset(
+                                      5.0,
+                                      5.0,
                                     ),
                                   ),
-                                  Icon(
-                                    Icons.arrow_forward,
-                                    color: Colors.lightBlueAccent,
-                                  ),
                                 ],
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(30),
                               ),
-                            ),
-                          )
-                        : Container(),
-                  ],
-                ),
-              ],
-            )
-          ],
+                              child: FlatButton(
+                                onPressed: () => uploadImagee(),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      'Üyeliği Tamamla',
+                                      style: TextStyle(
+                                        color: Colors.lightBlueAccent,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.arrow_forward,
+                                      color: Colors.lightBlueAccent,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          : Container(),
+                    ],
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -187,31 +195,29 @@ class _ProfilFOtoSecState extends State<ProfilFotoSec> {
 
   void secimEkrani(context) {
     showModalBottomSheet(
-        context: context,
+        context: this.context,
         builder: (BuildContext bc) {
           return SafeArea(
             child: Container(
               child: Wrap(
                 children: <Widget>[
                   ListTile(
-                      leading: Icon(
-                        Icons.photo_library,
-                        color: Colors.blue,
-                      ),
+                      leading: Icon(LineAwesomeIcons.photo_video),
                       title: new Text('Galeri'),
                       onTap: () {
-                        _imgFrom(ImageSource.gallery);
-                        Navigator.of(context).pop();
+                        _imgFrom(
+                          ImageSource.gallery,
+                        );
+                        Navigator.of(this.context).pop();
                       }),
                   ListTile(
-                    leading: Icon(
-                      Icons.photo_camera,
-                      color: Colors.blue,
-                    ),
+                    leading: Icon(LineAwesomeIcons.camera),
                     title: Text('Kamera'),
                     onTap: () {
-                      _imgFrom(ImageSource.camera);
-                      Navigator.of(context).pop();
+                      _imgFrom(
+                        ImageSource.camera,
+                      );
+                      Navigator.of(this.context).pop();
                     },
                   ),
                 ],
@@ -293,9 +299,11 @@ class _ProfilFOtoSecState extends State<ProfilFotoSec> {
       "uid": uid,
       "kullanıcıAdı": widget.name,
       "profilFoto": profilUrl,
-      "mail": widget.mail
+      "mail": widget.mail,
     }).whenComplete(() {
       Navigator.pop(this.context);
+      buildToast(this.context, "üye olundur");
+      _clearImage();
     });
   }
 }

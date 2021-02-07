@@ -4,6 +4,7 @@ import 'package:Hackathon/widget/yuklemeEkraniBekleme.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 class Ayrinti extends StatefulWidget {
   final paylasanID;
@@ -15,134 +16,153 @@ class Ayrinti extends StatefulWidget {
 
 class _AyrintiState extends State<Ayrinti> {
   @override
+  void initState() {
+    bilgiler();
+    super.initState();
+  }
+
+  bool isLoaded = false;
+  DocumentSnapshot kullaniciBilgileri;
+  DocumentSnapshot b;
+  void bilgiler() async {
+    kullaniciBilgileri = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(widget.paylasanID)
+        .get();
+    b = await FirebaseFirestore.instance
+        .collection("ilanlar")
+        .doc(widget.idd)
+        .get();
+    setState(() {
+      isLoaded = true;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Container(
-          decoration: genelSayfaTasarimi,
-          child: Column(
-            children: [
-              FutureBuilder(
-                  future: FirebaseFirestore.instance
-                      .collection("users")
-                      .doc(widget.paylasanID)
-                      .get(),
-                  builder: (BuildContext context, snapshot) {
-                    if (snapshot.hasError) {
-                      return yuklemeBasarisizIse();
-                    }
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return YuklemeBeklemeEkrani(
-                        gelenYazi: "Lütfen Bekleyin.",
-                      );
-                    }
-                    return Row(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(8),
-                          alignment: Alignment.bottomLeft,
-                          child: SizedBox(
-                              width: 75,
-                              height: 75,
-                              child: CircleAvatar(
-                                onBackgroundImageError:
-                                    (exception, stackTrace) => print("Hata"),
-                                backgroundImage: NetworkImage(
-                                  snapshot.data["profilFoto"],
+        floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
+        floatingActionButton: ortakLeading(context),
+        body: !isLoaded
+            ? YuklemeBeklemeEkrani(
+                gelenYazi: " Yükleniyor",
+              )
+            : Column(
+                children: [
+                  Stack(
+                    overflow: Overflow.visible,
+                    children: [
+                      CarouselSlider(
+                        options: CarouselOptions(
+                          viewportFraction: 10,
+                          enableInfiniteScroll: false,
+                          height: 250.0,
+                          autoPlay: true,
+                        ),
+                        items: b.data()["fotograflar"].map<Widget>((i) {
+                          return Builder(
+                            builder: (BuildContext context) {
+                              return Container(
+                                width: MediaQuery.of(context).size.width,
+                                margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[200],
                                 ),
-                              )),
-                        ),
-                        Text(
-                          snapshot.data["kullanıcıAdı"][0].toUpperCase() +
-                              snapshot.data["kullanıcıAdı"]
-                                  .substring(1)
-                                  .toLowerCase(),
-                          style: _textStyle,
-                        )
-                      ],
-                    );
-                  }),
-              FutureBuilder(
-                  future: FirebaseFirestore.instance
-                      .collection("ilanlar")
-                      .doc(widget.idd)
-                      .get(),
-                  builder: (BuildContext context, snapshot) {
-                    if (snapshot.hasError) {
-                      return yuklemeBasarisizIse();
-                    }
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return YuklemeBeklemeEkrani(
-                        gelenYazi: "Lütfen Bekleyin.",
-                      );
-                    }
-                    return Column(
-                      children: [
-                        CarouselSlider(
-                          options: CarouselOptions(
-                            enableInfiniteScroll: false,
-                            height: 181.0,
-                            autoPlay: true,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    print(i);
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                SadeceFotograf(
+                                                  gelenFoto: i,
+                                                )));
+                                  },
+                                  child: Hero(
+                                    tag: "hero$i",
+                                    child: Image.network(
+                                      i,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        }).toList(),
+                      ),
+                      Positioned(
+                        top: 210,
+                        child: Container(
+                          padding: EdgeInsets.all(20),
+                          height: MediaQuery.of(context).size.height - 210,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(40),
+                                  topRight: Radius.circular(40)),
+                              color: Colors.teal[400]),
+                          child: Column(
+                            children: [
+                              buildListTile(
+                                  kullaniciBilgileri
+                                          .data()["kullanıcıAdı"][0]
+                                          .toUpperCase() +
+                                      kullaniciBilgileri
+                                          .data()["kullanıcıAdı"]
+                                          .substring(1)
+                                          .toLowerCase(),
+                                  CircleAvatar(
+                                    onBackgroundImageError:
+                                        (exception, stackTrace) =>
+                                            print("Hata"),
+                                    backgroundImage: NetworkImage(
+                                      kullaniciBilgileri.data()["profilFoto"],
+                                    ),
+                                  )),
+                              Divider(),
+                              buildListTile(
+                                  b.data()["sehir"] + " / " + b.data()["ilçe"],
+                                  Icon(
+                                    LineAwesomeIcons.map,
+                                    color: Colors.white,
+                                  )),
+                              buildListTile(
+                                  b.data()["ilanKonusu"],
+                                  Icon(
+                                    LineAwesomeIcons.info,
+                                    color: Colors.white,
+                                  )),
+                              Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Text(
+                                  b.data()["ilanYazisi"],
+                                  style: _textStyle,
+                                  maxLines: 5,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
                           ),
-                          items: snapshot.data["fotograflar"].map<Widget>((i) {
-                            return Builder(
-                              builder: (BuildContext context) {
-                                return Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  margin: EdgeInsets.symmetric(horizontal: 5.0),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[200],
-                                    border: Border.all(
-                                      width: 2.0,
-                                    ),
-                                  ),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      print(i);
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SadeceFotograf(
-                                                    gelenFoto: i,
-                                                  )));
-                                    },
-                                    child: Hero(
-                                      tag: "hero$i",
-                                      child: Image.network(i),
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          }).toList(),
                         ),
-                        Divider(
-                          height: 15,
-                        ),
-                        Text(
-                          snapshot.data["sehir"] +
-                              " / " +
-                              snapshot.data["ilçe"],
-                          style: _textStyle,
-                        ),
-                        Text(
-                          snapshot.data["ilanKonusu"],
-                          style: _textStyle,
-                        ),
-                        Text(
-                          snapshot.data["ilanYazisi"],
-                          style: _textStyle,
-                          maxLines: 5,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    );
-                  }),
-            ],
-          ),
-        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
       ),
+    );
+  }
+
+  ListTile buildListTile(String text, dynamic icon) {
+    return ListTile(
+      title: Text(
+        text,
+        style: _textStyle,
+      ),
+      leading: icon,
     );
   }
 

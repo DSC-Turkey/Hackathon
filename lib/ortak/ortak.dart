@@ -1,13 +1,21 @@
+import 'dart:ui';
+
+import 'package:Hackathon/main.dart';
+import 'package:Hackathon/widget/sqflite.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:toast/toast.dart';
 
+const color = const Color(0xFF92FFC0);
+const color1 = const Color(0xff002661);
 BoxDecoration genelSayfaTasarimi = BoxDecoration(
   gradient: LinearGradient(
-      begin: Alignment.topRight,
-      end: Alignment.bottomLeft,
-      colors: [Colors.blueGrey, Colors.lightBlueAccent]),
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [color, color1]),
 );
+
 AppBar ortakAppBar(BuildContext context, String text) => AppBar(
       leading: IconButton(
         icon: Icon(LineAwesomeIcons.chevron_left),
@@ -59,3 +67,103 @@ String kullaniciAdiValidator(String value) {
 
 void buildToast(BuildContext context, String text) => Toast.show(text, context,
     duration: Toast.LENGTH_SHORT, gravity: Toast.CENTER);
+
+void ortakislemler(
+    BuildContext context, dynamic firebaseAuth, String text, dynamic id) {
+  showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return BackdropFilter(
+            filter: ImageFilter.blur(
+              sigmaX: 4.0,
+              sigmaY: 4.0,
+            ),
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              contentPadding: const EdgeInsets.all(16),
+              title: Text(text),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text(
+                    'Evet',
+                    style: TextStyle(color: Colors.grey[600]),
+                  ),
+                  onPressed: () async {
+                    if (text ==
+                        "Mailinize bir şifre sıfırlama bağlantısı gönderilecektir.") {
+                      await firebaseAuth
+                          .sendPasswordResetEmail(
+                              email: firebaseAuth.currentUser.email)
+                          .whenComplete(() {
+                        Navigator.pop(context);
+                        Toast.show("Bağlantı Gönderildi.", context,
+                            duration: Toast.LENGTH_SHORT,
+                            gravity: Toast.CENTER);
+                      });
+                    } else if (text ==
+                        "Oturumu kapatmak istediğine emin misin?") {
+                      final TodoHelper _todoHelper = TodoHelper();
+                      _todoHelper.delete();
+                      Navigator.of(context)
+                          .pushAndRemoveUntil(
+                              MaterialPageRoute(builder: (context) => MyApp()),
+                              (Route<dynamic> route) => false)
+                          .whenComplete(() {
+                        Toast.show("Oturum Kapatıldı", context,
+                            duration: Toast.LENGTH_LONG, gravity: Toast.CENTER);
+                      });
+                    } else if (text ==
+                        "Uygulamadan çıkmak istediğine emin misin?") {
+                      SystemNavigator.pop();
+                    } else if (text == "İlanı silmek istediğine emin misin?") {
+                      databaseReferance
+                          .collection("ilanlar")
+                          .doc(id)
+                          .delete()
+                          .whenComplete(() {
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                        buildToast(context, "İlan silindi.");
+                      });
+                    }
+                  },
+                ),
+                FlatButton(
+                  child: Text(
+                    'Hayır',
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+            ));
+      });
+}
+
+Center landingPage(String text) {
+  return Center(
+    child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(
+        text,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+            fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 18),
+      ),
+    ),
+  );
+}
+
+IconButton ortakLeading(BuildContext context) {
+  return IconButton(
+    icon: Icon(LineAwesomeIcons.arrow_left),
+    onPressed: () {
+      Navigator.pop(context);
+    },
+  );
+}

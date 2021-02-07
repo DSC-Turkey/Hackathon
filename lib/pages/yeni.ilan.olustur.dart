@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:path/path.dart';
 import 'package:toast/toast.dart';
 
@@ -63,8 +64,9 @@ class _YeniIlanOlusturState extends State<YeniIlanOlustur> {
         child: !isLoaded
             ? Center(
                 child: YuklemeBeklemeEkrani(
-                gelenYazi: "Yükleme Tamamlanıyor. Bekleyiniz.",
-              ))
+                  gelenYazi: "Yükleme Tamamlanıyor. Bekleyiniz.",
+                ),
+              )
             : ListView(
                 children: [
                   Padding(
@@ -77,16 +79,13 @@ class _YeniIlanOlusturState extends State<YeniIlanOlustur> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: TextField(
-                          onChanged: (value) {},
-                          maxLines: 5,
-                          minLines: 1,
+                          onChanged: (value) {
+                            setState(() {
+                              controller.text;
+                            });
+                          },
                           showCursor: true,
                           textInputAction: TextInputAction.newline,
-                          toolbarOptions: ToolbarOptions(
-                              selectAll: true,
-                              copy: true,
-                              cut: true,
-                              paste: true),
                           controller: controller,
                           decoration: InputDecoration(
                               contentPadding: EdgeInsets.all(5),
@@ -94,188 +93,158 @@ class _YeniIlanOlusturState extends State<YeniIlanOlustur> {
                               border: InputBorder.none),
                         )),
                   ),
-                  ExpansionTile(
-                    onExpansionChanged: (a) {
-                      FocusScope.of(context).unfocus();
-                    },
-                    backgroundColor: Colors.white,
-                    subtitle: Text("Neredesiniz ?"),
-                    leading: Icon(Icons.location_on),
-                    title: Text(
-                      "Konum Bilgileri",
-                      style: TextStyle(
-                          fontSize: 18.0, fontWeight: FontWeight.bold),
-                    ),
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          DropdownButton<String>(
-                            dropdownColor: Colors.lightBlueAccent,
-                            value: dropdownValueSehir,
-                            icon: Icon(
-                              Icons.arrow_downward,
-                              color: Colors.black,
-                            ),
-                            iconSize: 24,
-                            elevation: 16,
-                            style: TextStyle(color: Colors.black),
-                            underline: Container(
-                              height: 2,
-                              color: Colors.blue,
-                            ),
-                            onChanged: (String newValue) {
-                              setState(() {
-                                if (dropdownValueSehir != "Seçiniz")
-                                  dropdownValueIlce = "Seçiniz";
-                                dropdownValueSehir = newValue;
-                                for (var i = 0;
-                                    i < sehirler[2]["data"].length;
-                                    i++) {
-                                  if (sehirler[2]["data"][i]["sehir_title"] ==
-                                      dropdownValueSehir) {
-                                    secilenSehir =
-                                        sehirler[2]["data"][i]["sehir_key"];
-                                  }
-                                }
-                                print(secilenSehir);
-                              });
-                            },
-                            items: <String>[
-                              'Seçiniz',
+                  buildExpansionTile(
+                    context,
+                    "Konum Bilgileri",
+                    "Neredesiniz ?",
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        DropdownButton<String>(
+                          dropdownColor: Colors.lightBlueAccent,
+                          value: dropdownValueSehir,
+                          icon: Icon(
+                            Icons.arrow_downward,
+                            color: Colors.black,
+                          ),
+                          iconSize: 24,
+                          elevation: 16,
+                          style: TextStyle(color: Colors.black),
+                          underline: Container(
+                            height: 2,
+                            color: Colors.blue,
+                          ),
+                          onChanged: (String newValue) {
+                            setState(() {
+                              if (dropdownValueSehir != "Seçiniz")
+                                dropdownValueIlce = "Seçiniz";
+                              dropdownValueSehir = newValue;
                               for (var i = 0;
                                   i < sehirler[2]["data"].length;
-                                  i++)
-                                sehirler[2]["data"][i]["sehir_title"],
-                            ].map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(
-                                  value,
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                          dropdownValueSehir != "Seçiniz"
-                              ? DropdownButton<String>(
-                                  value: dropdownValueIlce,
-                                  icon: Icon(Icons.arrow_downward),
-                                  iconSize: 24,
-                                  elevation: 16,
-                                  style: TextStyle(color: Colors.black),
-                                  underline: Container(
-                                    height: 2,
-                                    color: Colors.blue,
-                                  ),
-                                  onChanged: (String newValue) {
-                                    setState(() {
-                                      dropdownValueIlce = newValue;
-                                    });
-                                  },
-                                  items: <String>[
-                                    'Seçiniz',
-                                    for (var i = 0;
-                                        i < ilceler[2]["data"].length;
-                                        i++)
-                                      if (ilceler[2]["data"][i]
-                                              ["ilce_sehirkey"] ==
-                                          secilenSehir)
-                                        ilceler[2]["data"][i]["ilce_title"]
-                                  ].map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-                                )
-                              : Container(
-                                  width: MediaQuery.of(context).size.width / 3,
-                                ),
-                        ],
-                      )
-                    ],
-                  ),
-                  ExpansionTile(
-                    onExpansionChanged: (a) {
-                      FocusScope.of(context).unfocus();
-                    },
-                    backgroundColor: Colors.white,
-                    subtitle: Text("Neden bu ilanı veriyorsun?"),
-                    leading: Icon(Icons.question_answer),
-                    title: Text(
-                      "İlan Çeşidi",
-                      style: TextStyle(
-                          fontSize: 18.0, fontWeight: FontWeight.bold),
-                    ),
-                    children: <Widget>[
-                      DropdownButton<String>(
-                        value: dropdownValueIlan,
-                        icon: Icon(Icons.arrow_downward),
-                        iconSize: 24,
-                        elevation: 16,
-                        style: TextStyle(color: Colors.black),
-                        underline: Container(
-                          height: 2,
-                          color: Colors.blue,
+                                  i++) {
+                                if (sehirler[2]["data"][i]["sehir_title"] ==
+                                    dropdownValueSehir) {
+                                  secilenSehir =
+                                      sehirler[2]["data"][i]["sehir_key"];
+                                }
+                              }
+                              print(secilenSehir);
+                            });
+                          },
+                          items: <String>[
+                            'Seçiniz',
+                            for (var i = 0; i < sehirler[2]["data"].length; i++)
+                              sehirler[2]["data"][i]["sehir_title"],
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value,
+                              ),
+                            );
+                          }).toList(),
                         ),
-                        onChanged: (String newValue) {
-                          setState(() {
-                            dropdownValueIlan = newValue;
-                          });
-                        },
-                        items: <String>[
-                          'Seçiniz',
-                          'Para Yardımı İstiyorum',
-                          'Ürün Yardımı İstiyorum',
-                        ].map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      )
-                    ],
-                  ),
-                  ExpansionTile(
-                    onExpansionChanged: (a) {
-                      FocusScope.of(context).unfocus();
-                    },
-                    backgroundColor: Colors.white,
-                    subtitle: Text("Fotoğraf yüklemek istersen yükle."),
-                    leading: Icon(Icons.question_answer),
-                    title: Text(
-                      "Fotoğraf",
-                      style: TextStyle(
-                          fontSize: 18.0, fontWeight: FontWeight.bold),
+                        dropdownValueSehir != "Seçiniz"
+                            ? DropdownButton<String>(
+                                value: dropdownValueIlce,
+                                icon: Icon(Icons.arrow_downward),
+                                iconSize: 24,
+                                elevation: 16,
+                                style: TextStyle(color: Colors.black),
+                                underline: Container(
+                                  height: 2,
+                                  color: Colors.blue,
+                                ),
+                                onChanged: (String newValue) {
+                                  setState(() {
+                                    dropdownValueIlce = newValue;
+                                  });
+                                },
+                                items: <String>[
+                                  'Seçiniz',
+                                  for (var i = 0;
+                                      i < ilceler[2]["data"].length;
+                                      i++)
+                                    if (ilceler[2]["data"][i]
+                                            ["ilce_sehirkey"] ==
+                                        secilenSehir)
+                                      ilceler[2]["data"][i]["ilce_title"]
+                                ].map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                              )
+                            : Container(
+                                width: MediaQuery.of(context).size.width / 3,
+                              ),
+                      ],
                     ),
-                    children: <Widget>[
-                      GridView.count(
-                        shrinkWrap: true,
-                        primary: false,
-                        padding: const EdgeInsets.all(20),
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                        crossAxisCount: 5,
-                        children: <Widget>[
-                          fotolar.length > 0
-                              ? buildContainer(gelenfile: fotolar[0])
-                              : buildContainer(),
-                          fotolar.length > 1
-                              ? buildContainer(gelenfile: fotolar[1])
-                              : buildContainer(),
-                          fotolar.length > 2
-                              ? buildContainer(gelenfile: fotolar[2])
-                              : buildContainer(),
-                          fotolar.length > 3
-                              ? buildContainer(gelenfile: fotolar[3])
-                              : buildContainer(),
-                          fotolar.length > 4
-                              ? buildContainer(gelenfile: fotolar[4])
-                              : buildContainer(),
-                        ],
+                    Icon(LineAwesomeIcons.map),
+                  ),
+                  buildExpansionTile(
+                    context,
+                    "İlan Çeşidi",
+                    "Neden bu ilanı veriyorsun?",
+                    DropdownButton<String>(
+                      value: dropdownValueIlan,
+                      icon: Icon(Icons.arrow_downward),
+                      iconSize: 24,
+                      elevation: 16,
+                      style: TextStyle(color: Colors.black),
+                      underline: Container(
+                        height: 2,
+                        color: Colors.blue,
                       ),
-                    ],
+                      onChanged: (String newValue) {
+                        setState(() {
+                          dropdownValueIlan = newValue;
+                        });
+                      },
+                      items: <String>[
+                        'Seçiniz',
+                        'Para Yardımı İstiyorum',
+                        'Ürün Yardımı İstiyorum',
+                      ].map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                    Icon(LineAwesomeIcons.exclamation),
+                  ),
+                  buildExpansionTile(
+                    context,
+                    "Fotoğraf",
+                    "Fotoğraf yüklemek istersen yükle",
+                    GridView.count(
+                      shrinkWrap: true,
+                      primary: false,
+                      padding: const EdgeInsets.all(20),
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      crossAxisCount: 5,
+                      children: <Widget>[
+                        fotolar.length > 0
+                            ? buildContainer(gelenfile: fotolar[0])
+                            : buildContainer(),
+                        fotolar.length > 1
+                            ? buildContainer(gelenfile: fotolar[1])
+                            : buildContainer(),
+                        fotolar.length > 2
+                            ? buildContainer(gelenfile: fotolar[2])
+                            : buildContainer(),
+                        fotolar.length > 3
+                            ? buildContainer(gelenfile: fotolar[3])
+                            : buildContainer(),
+                        fotolar.length > 4
+                            ? buildContainer(gelenfile: fotolar[4])
+                            : buildContainer(),
+                      ],
+                    ),
+                    Icon(LineAwesomeIcons.camera),
                   ),
                   Padding(
                     padding:
@@ -315,7 +284,7 @@ class _YeniIlanOlusturState extends State<YeniIlanOlustur> {
                                             title: Row(
                                               children: [
                                                 Text(
-                                                  "İlan Oluşturuluyor.",
+                                                  "İlan Oluşturuluyor.  ",
                                                   style:
                                                       TextStyle(fontSize: 17),
                                                 ),
@@ -352,17 +321,21 @@ class _YeniIlanOlusturState extends State<YeniIlanOlustur> {
                                   "paslasanName":
                                       gelenKullaniciAdi.toLowerCase(),
                                   "fotograflar": fotolarLink,
-                                  "sehir": dropdownValueSehir.toLowerCase(),
-                                  "ilçe": dropdownValueIlce.toLowerCase(),
-                                  "ilanKonusu": dropdownValueIlan.toLowerCase(),
-                                  "ilanYazisi": controller.text.toLowerCase(),
+                                  "sehir": dropdownValueSehir,
+                                  "ilçe": dropdownValueIlce,
+                                  "ilanKonusu": dropdownValueIlan,
+                                  "ilanYazisi": controller.text,
                                   "begenenler": [],
                                 }).whenComplete(() {
                                   setState(() {
                                     controller.clear();
+                                    dropdownValueSehir = 'Seçiniz';
+                                    dropdownValueIlce = 'Seçiniz';
+                                    dropdownValueIlan = 'Seçiniz';
                                   });
                                   Navigator.pop(context);
-                                  Navigator.pop(context);
+                                  buildToast(context, "İlan yayınlandı.");
+                                  setState(() {});
                                 });
                               }
                             : null,
@@ -392,6 +365,23 @@ class _YeniIlanOlusturState extends State<YeniIlanOlustur> {
     );
   }
 
+  ExpansionTile buildExpansionTile(BuildContext context, String textTitle,
+      String textSubtitle, dynamic children, dynamic leading) {
+    return ExpansionTile(
+      onExpansionChanged: (a) {
+        FocusScope.of(context).unfocus();
+      },
+      backgroundColor: Colors.white,
+      subtitle: Text(textSubtitle),
+      leading: leading,
+      title: Text(
+        textTitle,
+        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+      ),
+      children: <Widget>[children],
+    );
+  }
+
   GestureDetector buildContainer({File gelenfile}) {
     return GestureDetector(
         onTap: () {
@@ -399,12 +389,12 @@ class _YeniIlanOlusturState extends State<YeniIlanOlustur> {
         },
         child: Container(
           decoration: BoxDecoration(
-            color: gelenfile == null ? Colors.blueAccent : Colors.grey[50],
+            color: gelenfile == null ? Colors.lightBlueAccent : Colors.white,
             border: gelenfile == null ? Border.all(width: 2) : null,
           ),
           child: gelenfile != null
               ? Image.file(gelenfile)
-              : Icon(Icons.camera_alt),
+              : Icon(LineAwesomeIcons.camera),
         ));
   }
 
@@ -417,7 +407,7 @@ class _YeniIlanOlusturState extends State<YeniIlanOlustur> {
               child: Wrap(
                 children: <Widget>[
                   ListTile(
-                      leading: Icon(Icons.photo_library),
+                      leading: Icon(LineAwesomeIcons.photo_video),
                       title: new Text('Galeri'),
                       onTap: () {
                         _imgFrom(
@@ -426,7 +416,7 @@ class _YeniIlanOlusturState extends State<YeniIlanOlustur> {
                         Navigator.of(this.context).pop();
                       }),
                   ListTile(
-                    leading: Icon(Icons.photo_camera),
+                    leading: Icon(LineAwesomeIcons.camera),
                     title: Text('Kamera'),
                     onTap: () {
                       _imgFrom(
@@ -465,13 +455,17 @@ class _YeniIlanOlusturState extends State<YeniIlanOlustur> {
                 sigmaY: 4.0,
               ),
               child: AlertDialog(
-                title: Text(
-                  "Fotoğrafı kaldırmak istediğine emin misin?",
-                  style: TextStyle(fontSize: 17),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
                 ),
-                actions: [
+                contentPadding: const EdgeInsets.all(16),
+                title: Text("Fotoğrafı kaldırmak istediğine emin misin?"),
+                actions: <Widget>[
                   FlatButton(
-                    color: Colors.deepOrange,
+                    child: Text(
+                      'Evet',
+                      style: TextStyle(color: Colors.grey[600]),
+                    ),
                     onPressed: () {
                       setState(() {
                         fotolar.remove(gelen);
@@ -480,15 +474,16 @@ class _YeniIlanOlusturState extends State<YeniIlanOlustur> {
                       Toast.show("Fotoğraf Kaldırıldı", context,
                           duration: Toast.LENGTH_LONG, gravity: Toast.CENTER);
                     },
-                    child: Text("Evet"),
                   ),
                   FlatButton(
-                    color: Colors.green,
+                    child: Text(
+                      'Hayır',
+                      style: TextStyle(color: Colors.blue),
+                    ),
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: Text("Hayır"),
-                  ),
+                  )
                 ],
               ));
         });

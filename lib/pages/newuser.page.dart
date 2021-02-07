@@ -18,7 +18,6 @@ final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 TextEditingController newName = TextEditingController();
 TextEditingController newEmail = TextEditingController();
 TextEditingController newPassword = TextEditingController();
-
 GlobalKey<FormState> _nameNew = GlobalKey<FormState>();
 GlobalKey<FormState> _mailNew = GlobalKey<FormState>();
 GlobalKey<FormState> _passwordNew = GlobalKey<FormState>();

@@ -1,8 +1,8 @@
 import 'dart:ui';
 
+import 'package:Hackathon/ortak/ortak.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:toast/toast.dart';
 
 class LoginPageSifreUnuttum extends StatefulWidget {
   final globalKey1;
@@ -117,11 +117,11 @@ class _LoginPageSifreUnuttumState extends State<LoginPageSifreUnuttum> {
                                           email: widget.controller.text.trim())
                                       .whenComplete(() {
                                     Navigator.pop(context);
-                                    buildToast(
+                                    buildToast(context,
                                         "Şifre sıfırlama bağlantısı gönderildi. Mail kutunu kontrol et.");
                                   });
                                 } else {
-                                  buildToast(
+                                  buildToast(context,
                                       "${widget.controller.text} mail hesabı sistemde bulunamadı.");
                                 }
                               }
@@ -156,7 +156,4 @@ class _LoginPageSifreUnuttumState extends State<LoginPageSifreUnuttum> {
       ),
     );
   }
-
-  void buildToast(String text) => Toast.show(text, context,
-      duration: Toast.LENGTH_SHORT, gravity: Toast.CENTER);
 }
