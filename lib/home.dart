@@ -1,7 +1,10 @@
+import 'package:Hackathon/pages/ayrinti.dart';
 import 'package:Hackathon/pages/kart.dart';
 import 'package:Hackathon/yuklemeEkraniBekleme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+import 'ortak/ortak.dart';
 
 class Home extends StatefulWidget {
   Home(this.controller);
@@ -13,18 +16,15 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  String data =
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s";
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        // decoration: genelSayfaTasarimi,
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 30),
-          child: _listView,
-        ),
+      body: Column(
+        children: [
+          Expanded(
+            child: _listView,
+          ),
+        ],
       ),
     );
   }
@@ -43,39 +43,41 @@ class _HomeState extends State<Home> {
               gelenYazi: "Lütfen Bekleyin.",
             );
           }
-          return ListView.separated(
-            itemCount: snapshot.data.docs.length,
-            controller: widget.controller,
-            itemBuilder: (context, index) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Kartt(
-                    snapshot: snapshot,
-                    index: index,
-                  ),
-                ],
-              );
-            },
-            separatorBuilder: (BuildContext context, int index) {
-              return Divider(
-                height: 10,
-              );
-            },
+          return Container(
+            child: ListView.separated(
+              itemCount: snapshot.data.docs.length,
+              controller: widget.controller,
+              itemBuilder: (context, index) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Ayrinti(
+                                      paylasanID: snapshot.data.docs[index]
+                                          ["paylasanID"],
+                                      idd: snapshot.data.docs[index].id,
+                                    )));
+                      },
+                      child: Kartt(
+                        snapshot: snapshot,
+                        index: index,
+                      ),
+                    ),
+                  ],
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return Divider(
+                  height: 10,
+                );
+              },
+            ),
           );
         },
       );
-  Padding yuklemeBasarisizIse() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 5, 0, 0),
-      child: CircleAvatar(
-        backgroundColor: Colors.grey[50],
-        child: Icon(
-          Icons.clear,
-          color: Colors.red,
-        ),
-      ),
-    );
-  }
 }

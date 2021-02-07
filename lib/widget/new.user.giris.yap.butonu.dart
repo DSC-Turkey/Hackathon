@@ -1,24 +1,32 @@
-import 'package:Hackathon/pages/newuser.page.dart';
 import 'package:flutter/material.dart';
 
-class FirstTime extends StatefulWidget {
+class NewUserGirisYapButonu extends StatefulWidget {
+  final name;
+  final mail;
+  final password;
+  const NewUserGirisYapButonu({
+    Key key,
+    this.name,
+    this.mail,
+    this.password,
+  }) : super(key: key);
+
   @override
-  _FirstTimeState createState() => _FirstTimeState();
+  _NewUserGirisYapButonuState createState() => _NewUserGirisYapButonuState();
 }
 
-class _FirstTimeState extends State<FirstTime> {
+class _NewUserGirisYapButonuState extends State<NewUserGirisYapButonu> {
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 30, left: 30),
       child: Container(
         alignment: Alignment.topRight,
-        //color: Colors.red,
         height: 20,
         child: Row(
           children: <Widget>[
             Text(
-              'İlk seferin mi?',
+              'Daha önce tanıştık mı ?',
               style: TextStyle(
                 fontSize: 12,
                 color: Colors.white70,
@@ -27,11 +35,15 @@ class _FirstTimeState extends State<FirstTime> {
             FlatButton(
               padding: EdgeInsets.all(0),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => NewUser()));
+                setState(() {
+                  widget.name.clear();
+                  widget.mail.clear();
+                  widget.password.clear();
+                });
+                Navigator.pop(context);
               },
               child: Text(
-                'Üye Ol',
+                'Giriş Yap',
                 style: TextStyle(
                   fontSize: 12,
                   color: Colors.white,

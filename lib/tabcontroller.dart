@@ -116,19 +116,6 @@ class _TabBarControllerState extends State<TabBarController>
         textStyle: TextStyle(color: Colors.lightBlueAccent),
       );
 
-  Padding yuklemeBasarisizIse() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 5, 0, 0),
-      child: CircleAvatar(
-        backgroundColor: Colors.grey[50],
-        child: Icon(
-          Icons.clear,
-          color: Colors.red,
-        ),
-      ),
-    );
-  }
-
   Future<QuerySnapshot> getParkYerSilme() {
     setState(() {
       ilanArama = null;

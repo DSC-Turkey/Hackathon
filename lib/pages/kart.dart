@@ -1,4 +1,5 @@
 import 'package:Hackathon/main.dart';
+import 'package:Hackathon/ortak/ortak.dart';
 import 'package:Hackathon/pages/ana.ekran.dart';
 import 'package:Hackathon/pages/ayrinti.dart';
 import 'package:Hackathon/pages/yorumlar.dart';
@@ -164,19 +165,6 @@ class Kartt extends StatelessWidget {
               ],
             )
           ],
-        ),
-      ),
-    );
-  }
-
-  Padding yuklemeBasarisizIse() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 5, 0, 0),
-      child: CircleAvatar(
-        backgroundColor: Colors.grey[50],
-        child: Icon(
-          Icons.clear,
-          color: Colors.red,
         ),
       ),
     );

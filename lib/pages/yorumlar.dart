@@ -1,8 +1,12 @@
 import 'package:Hackathon/main.dart';
+import 'package:Hackathon/ortak/ortak.dart';
+import 'package:Hackathon/pages/ana.ekran.dart';
 import 'package:Hackathon/yuklemeEkraniBekleme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fitted_text_field_container/fitted_text_field_container.dart';
 import 'package:flutter/material.dart';
+
+var comments;
 
 class Yorumlar extends StatefulWidget {
   final ilanID;
@@ -19,24 +23,23 @@ TextEditingController controller = TextEditingController();
 
 class _YorumlarState extends State<Yorumlar> {
   @override
+  void initState() {
+    commentss();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.lightBlueAccent,
-        elevation: 0,
-        title: Text("Yorumlar"),
-      ),
+      appBar: ortakAppBar(context, "Yorumlar"),
       body: Column(
         children: [
           Expanded(
-            child: Container(
+            child: SingleChildScrollView(
               child: Column(
                 children: [
-                  StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection("yorumlar")
-                        .where("ilanID", isEqualTo: widget.ilanID)
-                        .snapshots(),
+                  FutureBuilder(
+                    future: comments,
                     builder: (BuildContext context, snapshot) {
                       if (snapshot.hasError) {
                         return yuklemeBasarisizIse();
@@ -46,28 +49,52 @@ class _YorumlarState extends State<Yorumlar> {
                           gelenYazi: "Lütfen Bekleyin.",
                         );
                       }
-                      //print(snapshot.data.docs[0]["yorum"]);
                       return ListView.builder(
+                        reverse: true,
                         shrinkWrap: true,
                         itemCount: snapshot.data.docs.length,
                         itemBuilder: (context, index) {
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  snapshot.data.docs[index]["yorumYapanAd"],
-                                  style: TextStyle(
+                            child: ListTile(
+                              leading: ClipRRect(
+                                borderRadius: BorderRadius.circular(20.0),
+                                child: CircleAvatar(
+                                  child: Image.network(snapshot.data.docs[index]
+                                      ["yorumYapanProfilFoto"]),
+                                ),
+                              ),
+                              title: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    snapshot.data.docs[index]["yorumYapanAd"],
+                                    style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 20),
-                                ),
-                                Text(
-                                  snapshot.data.docs[index]["yorum"],
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
+                                    ),
+                                  ),
+                                  Text(
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                                  snapshot.data.docs[index]
+                                                      ["zaman"])
+                                              .hour
+                                              .toString() +
+                                          "." +
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                                  snapshot.data.docs[index]
+                                                      ["zaman"])
+                                              .minute
+                                              .toString(),
+                                      style: TextStyle(
+                                        fontSize: 10.0,
+                                      )),
+                                ],
+                              ),
+                              subtitle: Text(
+                                snapshot.data.docs[index]["yorum"],
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           );
                         },
@@ -99,7 +126,11 @@ class _YorumlarState extends State<Yorumlar> {
           Expanded(
             child: FittedTextFieldContainer(
               child: TextField(
-                onChanged: (value) {},
+                onChanged: (value) {
+                  setState(() {
+                    controller.text;
+                  });
+                },
                 maxLines: 5,
                 minLines: 1,
                 showCursor: true,
@@ -112,39 +143,43 @@ class _YorumlarState extends State<Yorumlar> {
               ),
             ),
           ),
-          IconButton(
-            splashRadius: 20,
-            onPressed: () {
-              databaseReferance.collection("yorumlar").add({
-                "ilanID": widget.ilanID,
-                "yorumYapanAd": "samet",
-                "yorum": controller.text,
-              }).whenComplete(() {
-                setState(() {
-                  controller.clear();
-                });
-              });
-            },
-            icon: Icon(
-              Icons.send,
-              color: Colors.lightBlueAccent,
-            ),
-          )
+          controller.text.trim().length <= 0
+              ? Container()
+              : IconButton(
+                  splashRadius: 20,
+                  onPressed: () {
+                    databaseReferance.collection("yorumlar").add({
+                      "ilanID": widget.ilanID,
+                      "yorumYapanAd": kullaniciAdi,
+                      "yorum": controller.text,
+                      "yorumYapanProfilFoto": kullaniciProfilFoto,
+                      "zaman": DateTime.now().millisecondsSinceEpoch,
+                    }).whenComplete(() {
+                      setState(() {
+                        controller.clear();
+                        commentss();
+                      });
+                    });
+                  },
+                  icon: Icon(
+                    Icons.send,
+                    color: Colors.lightBlueAccent,
+                  ),
+                )
         ],
       ),
     );
   }
 
-  Padding yuklemeBasarisizIse() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 5, 0, 0),
-      child: CircleAvatar(
-        backgroundColor: Colors.grey[50],
-        child: Icon(
-          Icons.clear,
-          color: Colors.red,
-        ),
-      ),
-    );
+  Future<QuerySnapshot> commentss() {
+    comments = FirebaseFirestore.instance
+        .collection("yorumlar")
+        .where("ilanID", isEqualTo: widget.ilanID)
+        .orderBy("zaman", descending: false)
+        .get();
+    setState(() {
+      comments = comments;
+    });
+    return comments;
   }
 }

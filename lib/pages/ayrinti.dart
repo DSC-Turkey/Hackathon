@@ -146,19 +146,6 @@ class _AyrintiState extends State<Ayrinti> {
     );
   }
 
-  Padding yuklemeBasarisizIse() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 5, 0, 0),
-      child: CircleAvatar(
-        backgroundColor: Colors.grey[50],
-        child: Icon(
-          Icons.clear,
-          color: Colors.red,
-        ),
-      ),
-    );
-  }
-
   TextStyle _textStyle =
       TextStyle(color: Colors.white, fontWeight: FontWeight.bold);
 }

@@ -181,13 +181,17 @@ class _AnaEkranHomeState extends State<AnaEkranHome> {
                 sigmaY: 4.0,
               ),
               child: AlertDialog(
-                title: Text(
-                  "Oturumu kapatmak istediğine emin misin?",
-                  style: TextStyle(fontSize: 17),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
                 ),
-                actions: [
+                contentPadding: const EdgeInsets.all(16),
+                title: Text("Oturumu kapatmak istediğine emin misin?"),
+                actions: <Widget>[
                   FlatButton(
-                    color: Colors.deepOrange,
+                    child: Text(
+                      'Evet',
+                      style: TextStyle(color: Colors.grey[600]),
+                    ),
                     onPressed: () {
                       final TodoHelper _todoHelper = TodoHelper();
                       _todoHelper.delete();
@@ -200,15 +204,16 @@ class _AnaEkranHomeState extends State<AnaEkranHome> {
                             duration: Toast.LENGTH_LONG, gravity: Toast.CENTER);
                       });
                     },
-                    child: Text("Evet"),
                   ),
                   FlatButton(
-                    color: Colors.green,
+                    child: Text(
+                      'Hayır',
+                      style: TextStyle(color: Colors.blue),
+                    ),
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: Text("Hayır"),
-                  ),
+                  )
                 ],
               ));
         });

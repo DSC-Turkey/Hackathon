@@ -1,3 +1,4 @@
+import 'package:Hackathon/ortak/ortak.dart';
 import 'package:Hackathon/pages/kart.dart';
 import 'package:Hackathon/yuklemeEkraniBekleme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -114,18 +115,5 @@ class _AramaEkraniState extends State<AramaEkrani> {
       ilanArama = null;
     });
     return ilanlar;
-  }
-
-  Padding yuklemeBasarisizIse() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 5, 0, 0),
-      child: CircleAvatar(
-        backgroundColor: Colors.grey[50],
-        child: Icon(
-          Icons.clear,
-          color: Colors.red,
-        ),
-      ),
-    );
   }
 }
