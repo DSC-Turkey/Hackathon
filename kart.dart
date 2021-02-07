@@ -1,11 +1,10 @@
 import 'package:Hackathon/main.dart';
 import 'package:Hackathon/pages/ana.ekran.dart';
 import 'package:Hackathon/pages/yorumlar.dart';
-import 'package:Hackathon/yuklemeEkraniBekleme.dart';
-import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:Hackathon/widget/yuklemeEkraniBekleme.dart';
 
 class Kartt extends StatelessWidget {
   final snapshot;

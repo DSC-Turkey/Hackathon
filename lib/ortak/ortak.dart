@@ -125,7 +125,6 @@ void ortakislemler(
                           .delete()
                           .whenComplete(() {
                         Navigator.pop(context);
-                        Navigator.pop(context);
                         buildToast(context, "İlan silindi.");
                       });
                     }
