@@ -1,6 +1,5 @@
 import 'package:Hackathon/ortak/ortak.dart';
-import 'package:Hackathon/pages/kart.dart';
-import 'package:Hackathon/widget/yuklemeEkraniBekleme.dart';
+import 'package:Hackathon/widget/aramadan.gelenler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -61,53 +60,7 @@ class _AramaEkraniState extends State<AramaEkrani> {
                   enabledBorder:
                       UnderlineInputBorder(borderSide: BorderSide())),
             ),
-            Expanded(
-                child: ilanArama != null
-                    ? FutureBuilder(
-                        future: ilanArama,
-                        builder: (BuildContext context, snapshot) {
-                          if (snapshot.hasError) {
-                            return yuklemeBasarisizIse();
-                          }
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return YuklemeBeklemeEkrani(
-                              gelenYazi: "Aranıyor.",
-                            );
-                          }
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: snapshot.data.docs.length != 0
-                                ? ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: snapshot.data.docs.length,
-                                    itemBuilder: (context, index) {
-                                      return Kartt(
-                                        index: index,
-                                        snapshot: snapshot,
-                                      );
-                                    })
-                                : Center(
-                                    child: Text(
-                                      "BULUNAMADI.",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.grey,
-                                          fontSize: 18),
-                                    ),
-                                  ),
-                          );
-                        })
-                    : Center(
-                        child: Text(
-                          "Bulunan Kullanıcılar Burada Görüntülecek.",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                              fontSize: 18),
-                        ),
-                      ))
+            AramadanGelenler()
           ],
         ),
       ),

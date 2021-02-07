@@ -26,140 +26,125 @@ class _KarttState extends State<Kartt> {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.fromLTRB(20, 35, 20, 35),
-      child: GestureDetector(
-        onTap: () {
-          /*Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => Ayrinti(
-                        paylasanID: widget.snapshot.data.docs[widget.index]
-                            ["paylasanID"],
-                        idd: widget.snapshot.data.docs[widget.index].id,
-                      )));*/
-        },
-        child: OpenContainer(
-          closedElevation: 0,
-          closedColor: Colors.transparent,
-          openBuilder: (context, _) => Ayrinti(
-              paylasanID: widget.snapshot.data.docs[widget.index]["paylasanID"],
-              idd: widget.snapshot.data.docs[widget.index].id),
-          closedBuilder: (context, _) => Card(
-            elevation: 50,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0)),
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  ClipRRect(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20)),
-                      child: Container(
-                          padding: EdgeInsets.only(bottom: 10),
-                          child: Image.network(widget.snapshot.data
-                              .docs[widget.index]["fotograflar"][0]))),
-                  FutureBuilder(
-                      future: FirebaseFirestore.instance
-                          .collection("users")
-                          .doc(widget.snapshot.data.docs[widget.index]
-                              ["paylasanID"])
-                          .get(),
-                      builder: (BuildContext context, snapshot2) {
-                        if (snapshot2.hasError) {
-                          return yuklemeBasarisizIse();
-                        }
-                        if (snapshot2.connectionState ==
-                            ConnectionState.waiting) {
-                          return YuklemeBeklemeEkrani(
-                            gelenYazi: "Lütfen Bekleyin.",
-                          );
-                        }
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 30,
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        width: 2.0,
-                                        color: Colors.grey,
-                                      ),
-                                      borderRadius: BorderRadius.circular(70.0),
-                                      image: DecorationImage(
-                                        image: NetworkImage(
-                                            snapshot2.data["profilFoto"]),
-                                        fit: BoxFit.cover,
-                                      ),
+      child: OpenContainer(
+        closedElevation: 0,
+        closedColor: Colors.transparent,
+        openBuilder: (context, _) => Ayrinti(
+            paylasanID: widget.snapshot.data.docs[widget.index]["paylasanID"],
+            idd: widget.snapshot.data.docs[widget.index].id),
+        closedBuilder: (context, _) => Card(
+          elevation: 50,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                ClipRRect(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20)),
+                    child: Container(
+                        padding: EdgeInsets.only(bottom: 10),
+                        child: Image.network(widget.snapshot.data
+                            .docs[widget.index]["fotograflar"][0]))),
+                FutureBuilder(
+                    future: FirebaseFirestore.instance
+                        .collection("users")
+                        .doc(widget.snapshot.data.docs[widget.index]
+                            ["paylasanID"])
+                        .get(),
+                    builder: (BuildContext context, snapshot2) {
+                      if (snapshot2.hasError) {
+                        return yuklemeBasarisizIse();
+                      }
+                      if (snapshot2.connectionState ==
+                          ConnectionState.waiting) {
+                        return YuklemeBeklemeEkrani(
+                          gelenYazi: "Lütfen Bekleyin.",
+                        );
+                      }
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 30,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      width: 2.0,
+                                      color: Colors.grey,
+                                    ),
+                                    borderRadius: BorderRadius.circular(70.0),
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                          snapshot2.data["profilFoto"]),
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
-                                  Text(
-                                      '  ${widget.snapshot.data.docs[widget.index]["paslasanName"]}',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold)),
-                                ],
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                Icon(LineAwesomeIcons.heart_1),
-                                Text(
-                                  widget
-                                          .snapshot
-                                          .data
-                                          .docs[widget.index]["begenenler"]
-                                          .length
-                                          .toString() +
-                                      "   ",
                                 ),
+                                Text(
+                                    '  ${widget.snapshot.data.docs[widget.index]["paslasanName"]}',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
                               ],
                             ),
-                          ],
-                        );
-                      }),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 3, 20, 3),
-                    child: Text(
-                      '${widget.snapshot.data.docs[widget.index]["ilanYazisi"]}',
-                      style: TextStyle(fontWeight: FontWeight.w500),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
+                          ),
+                          Row(
+                            children: [
+                              Icon(LineAwesomeIcons.heart_1),
+                              Text(
+                                widget.snapshot.data
+                                        .docs[widget.index]["begenenler"].length
+                                        .toString() +
+                                    "   ",
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    }),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 3, 20, 3),
+                  child: Text(
+                    '${widget.snapshot.data.docs[widget.index]["ilanYazisi"]}',
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   ),
-                  buildText(
-                      "${(widget.snapshot.data.docs[widget.index]["sehir"]).toString()} / ${(widget.snapshot.data.docs[widget.index]["ilçe"]).toString()}"),
-                  buildText(
-                      "${widget.snapshot.data.docs[widget.index]["ilanKonusu"]}"),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        buildMaterial(
-                          context,
-                          "Beğen ",
-                          Icon(
-                            LineAwesomeIcons.heart,
-                            color: Colors.red,
-                          ),
+                ),
+                buildText(
+                    "${(widget.snapshot.data.docs[widget.index]["sehir"]).toString()} / ${(widget.snapshot.data.docs[widget.index]["ilçe"]).toString()}"),
+                buildText(
+                    "${widget.snapshot.data.docs[widget.index]["ilanKonusu"]}"),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      buildMaterial(
+                        context,
+                        "Beğen ",
+                        Icon(
+                          LineAwesomeIcons.heart,
+                          color: Colors.red,
                         ),
-                        buildMaterial(
-                          context,
-                          "Yorumlar ",
-                          Icon(
-                            LineAwesomeIcons.comment,
-                            color: Colors.blue,
-                          ),
+                      ),
+                      buildMaterial(
+                        context,
+                        "Yorumlar ",
+                        Icon(
+                          LineAwesomeIcons.comment,
+                          color: Colors.blue,
                         ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
             ),
           ),
         ),

@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:Hackathon/ortak/ortak.dart';
 import 'package:Hackathon/pages/ilanlarim.dart';
-import 'package:Hackathon/pages/sadece.fotograf.dart';
+import 'package:Hackathon/widget/profil.getir.dart';
 import 'package:Hackathon/widget/sqflite.dart';
 import 'package:Hackathon/pages/tabcontroller.dart';
 import 'package:animations/animations.dart';
@@ -57,44 +57,7 @@ class _AnaEkranHomeState extends State<AnaEkranHome> {
                     width: double.infinity,
                     height: 150,
                   ),
-                  Positioned(
-                    bottom: 0,
-                    left: 10,
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SadeceFotograf(
-                                        gelenFoto: kullaniciProfilFoto,
-                                      )));
-                        },
-                        child: Hero(
-                          tag: "hero$kullaniciProfilFoto",
-                          child: Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(
-                                width: 2.0,
-                                color: Colors.grey,
-                              ),
-                              borderRadius: BorderRadius.circular(70.0),
-                              image: kullaniciProfilFoto != null
-                                  ? DecorationImage(
-                                      image: NetworkImage(kullaniciProfilFoto),
-                                      fit: BoxFit.cover,
-                                    )
-                                  : null,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  ProfilGetir(),
                   Positioned(
                     top: 90,
                     left: 130,

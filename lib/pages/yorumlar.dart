@@ -2,7 +2,7 @@ import 'package:Hackathon/main.dart';
 import 'package:Hackathon/ortak/ortak.dart';
 import 'package:Hackathon/pages/ana.ekran.dart';
 import 'package:Hackathon/pages/noConnection.dart';
-import 'package:Hackathon/widget/yuklemeEkraniBekleme.dart';
+import 'package:Hackathon/widget/yorumlar.firebase.kismi.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fitted_text_field_container/fitted_text_field_container.dart';
 import 'package:flutter/material.dart';
@@ -44,114 +44,34 @@ class _YorumlarState extends State<Yorumlar> {
             final bool connected = connectivity != ConnectivityResult.none;
             return connected
                 ? Scaffold(
-                    appBar: ortakAppBar(context, "Yorumlar"),
-                    body: Column(
+                    floatingActionButtonLocation:
+                        FloatingActionButtonLocation.startTop,
+                    floatingActionButton: Row(
                       children: [
-                        Expanded(
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                FutureBuilder(
-                                  future: comments,
-                                  builder: (BuildContext context, snapshot) {
-                                    if (snapshot.hasError) {
-                                      return yuklemeBasarisizIse();
-                                    }
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return YuklemeBeklemeEkrani(
-                                        gelenYazi: "Lütfen Bekleyin.",
-                                      );
-                                    }
-                                    return snapshot.data.docs.length != 0
-                                        ? ListView.builder(
-                                            reverse: true,
-                                            shrinkWrap: true,
-                                            itemCount:
-                                                snapshot.data.docs.length,
-                                            itemBuilder: (context, index) {
-                                              return Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: ListTile(
-                                                  leading: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20.0),
-                                                    child: CircleAvatar(
-                                                      child: Image.network(snapshot
-                                                              .data.docs[index][
-                                                          "yorumYapanProfilFoto"]),
-                                                    ),
-                                                  ),
-                                                  title: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Text(
-                                                        snapshot.data
-                                                                .docs[index]
-                                                            ["yorumYapanAd"],
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                          DateTime.fromMillisecondsSinceEpoch(snapshot
-                                                                          .data
-                                                                          .docs[index]
-                                                                      ["zaman"])
-                                                                  .hour
-                                                                  .toString() +
-                                                              "." +
-                                                              DateTime.fromMillisecondsSinceEpoch(snapshot
-                                                                          .data
-                                                                          .docs[index]
-                                                                      ["zaman"])
-                                                                  .minute
-                                                                  .toString(),
-                                                          style: TextStyle(
-                                                            fontSize: 10.0,
-                                                          )),
-                                                    ],
-                                                  ),
-                                                  subtitle: Text(
-                                                    snapshot.data.docs[index]
-                                                        ["yorum"],
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          )
-                                        : Padding(
-                                            padding: EdgeInsets.only(
-                                              top: MediaQuery.of(context)
-                                                      .size
-                                                      .height /
-                                                  5,
-                                            ),
-                                            child: Center(
-                                              child: Text(
-                                                "İlk yorum yapan sen ol.",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.grey,
-                                                    fontSize: 18),
-                                              ),
-                                            ),
-                                          );
-                                  },
-                                )
-                              ],
+                        ortakLeading(context),
+                        Text(
+                          "Yorumlar",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ],
+                    ),
+                    body: Container(
+                      decoration: genelSayfaTasarimi,
+                      child: Column(
+                        children: [
+                          Divider(
+                            height: 40,
+                          ),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [YorumlarFirebaseKismi()],
+                              ),
                             ),
                           ),
-                        ),
-                        mesajBari(context),
-                      ],
+                          mesajBari(context),
+                        ],
+                      ),
                     ),
                   )
                 : NoConnection();
