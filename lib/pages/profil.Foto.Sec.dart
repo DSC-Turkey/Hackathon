@@ -293,7 +293,6 @@ class _ProfilFOtoSecState extends State<ProfilFotoSec> {
     var downloadUrl = await snapshot.ref.getDownloadURL();
     setState(() {
       profilUrl = downloadUrl;
-      print(profilUrl);
     });
     databaseReferance.collection("users").add({
       "uid": uid,

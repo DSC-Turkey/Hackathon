@@ -78,16 +78,15 @@ class _TabBarControllerState extends State<TabBarController>
   Widget get _tabBar => MotionTabBar(
         labels: ["Arama", "Akış", "İlan Ekle"],
         initialSelectedTab: "Akış",
-        tabIconColor: Colors.blueGrey,
-        tabSelectedColor: Colors.blue,
+        tabIconColor: Colors.teal[400],
+        tabSelectedColor: Colors.teal[400],
         onTabItemSelected: (int value) {
-          print(value);
           setState(() {
             _tabController.index = value;
           });
         },
         icons: [LineAwesomeIcons.search, LineAwesomeIcons.stream, Icons.add],
-        textStyle: TextStyle(color: Colors.blue),
+        textStyle: TextStyle(color: Colors.teal[400]),
       );
 }
 

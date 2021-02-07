@@ -71,7 +71,6 @@ class _AyrintiState extends State<Ayrinti> {
                                 ),
                                 child: GestureDetector(
                                   onTap: () {
-                                    print(i);
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(

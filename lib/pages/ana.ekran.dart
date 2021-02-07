@@ -163,7 +163,6 @@ class _AnaEkranHomeState extends State<AnaEkranHome> {
         kullaniciProfilFoto = list.last.kullaniciProfilFoto;
         kullaniciMail = list.last.kullaniciMail;
         kullaniciAdi = list.last.kullaniciAdi;
-        print(kullaniciAdi);
       });
       return "";
     }

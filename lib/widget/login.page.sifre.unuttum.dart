@@ -110,7 +110,6 @@ class _LoginPageSifreUnuttumState extends State<LoginPageSifreUnuttum> {
                                 final mailVarMi = await widget.firebaseAuth
                                     .fetchSignInMethodsForEmail(
                                         widget.controller.text.trim());
-                                print(mailVarMi.length);
                                 if (mailVarMi.length >= 1) {
                                   await widget.firebaseAuth
                                       .sendPasswordResetEmail(

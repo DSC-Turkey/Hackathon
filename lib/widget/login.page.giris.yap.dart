@@ -66,7 +66,6 @@ class _LoginPageGirisYapState extends State<LoginPageGirisYap> {
                     .get()
                     .then((value) {
                   idd = value.docs.first.id;
-                  print(value.docs.first.data()["kullanıcıAdı"]);
                   gonderilen = TaskModel(
                       kullaniciAdi: value.docs.first.data()["kullanıcıAdı"],
                       kullaniciID: idd,

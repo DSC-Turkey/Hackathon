@@ -3,7 +3,6 @@ import 'package:Hackathon/pages/ana.ekran.dart';
 import 'package:Hackathon/pages/yorumlar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:Hackathon/widget/yuklemeEkraniBekleme.dart';
 
 class Kartt extends StatelessWidget {
@@ -131,7 +130,6 @@ class Kartt extends StatelessWidget {
                             "begenenler": gel,
                           });
                         });
-                        print(snapshot.data.docs[index].id);
                       },
                       child: Row(
                         children: [
@@ -159,26 +157,6 @@ class Kartt extends StatelessWidget {
                         children: [
                           Text("Yorum Yap "),
                           Icon(Icons.comment),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Material(
-                    child: InkWell(
-                      customBorder: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      onTap: () async {
-                        const url = 'tel://05419403812';
-                        if (await canLaunch(url)) {
-                          await launch(url);
-                        } else {
-                          throw 'Could not launch $url';
-                        }
-                      },
-                      child: Row(
-                        children: [
-                          Text("Yardım Et "),
-                          Icon(Icons.help),
                         ],
                       ),
                     ),

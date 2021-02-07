@@ -128,7 +128,6 @@ class _YeniIlanOlusturState extends State<YeniIlanOlustur> {
                                       sehirler[2]["data"][i]["sehir_key"];
                                 }
                               }
-                              print(secilenSehir);
                             });
                           },
                           items: <String>[
