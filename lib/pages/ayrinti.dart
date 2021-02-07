@@ -1,6 +1,6 @@
 import 'package:Hackathon/ortak/ortak.dart';
 import 'package:Hackathon/pages/sadece.fotograf.dart';
-import 'package:Hackathon/yuklemeEkraniBekleme.dart';
+import 'package:Hackathon/widget/yuklemeEkraniBekleme.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

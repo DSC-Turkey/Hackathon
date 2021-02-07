@@ -1,5 +1,5 @@
 import 'package:Hackathon/ortak/ortak.dart';
-import 'package:Hackathon/sqflite.dart';
+import 'package:Hackathon/widget/sqflite.dart';
 import 'package:Hackathon/widget/login.page.eposta.dart';
 import 'package:Hackathon/widget/login.page.giris.yap.dart';
 import 'package:Hackathon/widget/login.page.ilk.seferin.mi.dart';

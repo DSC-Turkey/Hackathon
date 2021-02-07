@@ -1,10 +1,10 @@
 import 'package:Hackathon/pages/ayrinti.dart';
 import 'package:Hackathon/pages/kart.dart';
-import 'package:Hackathon/yuklemeEkraniBekleme.dart';
+import 'package:Hackathon/widget/yuklemeEkraniBekleme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import 'ortak/ortak.dart';
+import '../ortak/ortak.dart';
 
 class Home extends StatefulWidget {
   Home(this.controller);

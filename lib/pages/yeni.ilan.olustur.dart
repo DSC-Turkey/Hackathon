@@ -6,7 +6,7 @@ import 'package:Hackathon/main.dart';
 import 'package:Hackathon/ortak/ortak.dart';
 import 'package:Hackathon/pages/ana.ekran.dart';
 import 'package:Hackathon/pages/profil.Foto.Sec.dart';
-import 'package:Hackathon/yuklemeEkraniBekleme.dart';
+import 'package:Hackathon/widget/yuklemeEkraniBekleme.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

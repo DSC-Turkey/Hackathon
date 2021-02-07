@@ -2,7 +2,7 @@ import 'package:Hackathon/pages/ana.ekran.dart';
 import 'package:Hackathon/pages/kart.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../yuklemeEkraniBekleme.dart';
+import '../widget/yuklemeEkraniBekleme.dart';
 
 class Ilanlarim extends StatefulWidget {
   @override

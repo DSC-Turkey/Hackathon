@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:Hackathon/home.dart';
+import 'package:Hackathon/pages/home.dart';
 import 'package:Hackathon/pages/yeni.ilan.olustur.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +9,7 @@ import 'package:motion_tab_bar/MotionTabBarView.dart';
 import 'package:motion_tab_bar/MotionTabController.dart';
 import 'package:motion_tab_bar/motiontabbar.dart';
 
-import 'pages/arama.ekrani.dart';
+import 'arama.ekrani.dart';
 
 var ilanlar;
 Future<QuerySnapshot> ilanArama;

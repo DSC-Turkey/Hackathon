@@ -5,7 +5,7 @@ import 'package:Hackathon/ortak/ortak.dart';
 import 'package:Hackathon/pages/ana.ekran.dart';
 import 'package:flutter/material.dart';
 
-import '../sqflite.dart';
+import 'sqflite.dart';
 
 String idd;
 TaskModel gonderilen;

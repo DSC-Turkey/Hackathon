@@ -1,6 +1,6 @@
 import 'package:Hackathon/ortak/ortak.dart';
 import 'package:Hackathon/pages/kart.dart';
-import 'package:Hackathon/yuklemeEkraniBekleme.dart';
+import 'package:Hackathon/widget/yuklemeEkraniBekleme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';

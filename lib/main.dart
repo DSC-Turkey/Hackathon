@@ -1,6 +1,6 @@
 import 'package:Hackathon/pages/ana.ekran.dart';
 import 'package:Hackathon/pages/ilk.ekran.dart';
-import 'package:Hackathon/sqflite.dart';
+import 'package:Hackathon/widget/sqflite.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';

@@ -1,7 +1,7 @@
 import 'package:Hackathon/main.dart';
 import 'package:Hackathon/ortak/ortak.dart';
 import 'package:Hackathon/pages/ana.ekran.dart';
-import 'package:Hackathon/yuklemeEkraniBekleme.dart';
+import 'package:Hackathon/widget/yuklemeEkraniBekleme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fitted_text_field_container/fitted_text_field_container.dart';
 import 'package:flutter/material.dart';
